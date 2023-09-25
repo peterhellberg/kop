@@ -18,10 +18,7 @@ func main() {
 
 	http.Handle(server.Basepath, server)
 
-	addr := ":" + port()
-
-	log.Println("Listening on http://localhost" + addr)
-	log.Fatal(http.ListenAndServe(addr, nil))
+	log.Fatal(http.ListenAndServe(":"+port(), nil))
 }
 
 func port() string {
