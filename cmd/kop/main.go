@@ -40,11 +40,11 @@ func run(args []string, stdout io.Writer) error {
 	}
 
 	switch args[0] {
-	case "INGET":
+	case "INGET", "NOTHING":
 		_, err := list.Clear(ctx, rpc.ClearRequest{})
 
 		return err
-	case "INTE":
+	case "INTE", "NO":
 		res, err := list.Remove(ctx, rpc.RemoveRequest{Items: args[1:]})
 		if err != nil {
 			return err
