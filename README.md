@@ -19,8 +19,50 @@ Run `kop-server` in one terminal (this will by default start a web server on `lo
 
 Then run `kop Eggs Milk Flour` to create an initial list using the command line interface.
 
+```md
+ - EGGS
+ - FLOUR
+ - MILK
+```
+
 > [!IMPORTANT]
 > If you speak Swedish, then you will want to `alias köp='kop'` (and if not, then you might want to `alias buy='kop'`)
+
+You can then remove an item from the list by calling `kop no Eggs`
+
+```md
+ - FLOUR
+ - MILK
+```
+
+If you do not want to use the cli then you can use [cURL](https://curl.se) directly
+
+```sh
+curl -d '{}' http://localhost:12432/rpc/List.Items
+```
+```json
+{
+  "items": [
+    "FLOUR",
+    "MILK"
+  ]
+}
+```
+
+And even add something else to the list 🍺
+
+```sh
+curl -d '{"items": ["Beer"]}' http://localhost:12432/rpc/List.Add
+```
+```json
+{
+  "items": [
+    "BEER",
+    "FLOUR",
+    "MILK"
+  ]
+}
+```
 
 ## Definitions
 
