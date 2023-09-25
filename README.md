@@ -2,13 +2,15 @@
 
 [![License MIT](https://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](https://github.com/peterhellberg/kop#license-mit)
 
-A small example of using [oto](https://github.com/pacedotdev/oto) for RPC code generation.
+A small example of using [oto](https://github.com/pacedotdev/oto) for RPC code generation in the form of a shopping list CLI.
 
 ## Installation
 
-```
+```sh
 go install github.com/peterhellberg/kop/cmd/...@latest
 ```
+
+(This will install two binaries, `kop` and `kop-server`)
 
 ## Usage
 
@@ -65,6 +67,8 @@ curl -d '{"items": ["Beer"]}' localhost:12432/rpc/List.Add
   ]
 }
 ```
+
+And when you want to start a new list then just run `kop nothing`
 
 ## Definitions
 
