@@ -14,7 +14,8 @@ go install github.com/peterhellberg/kop/cmd/...@latest
 
 Run `kop-server` in one terminal (this will by default start a web server on `localhost:12432`)
 
-If you have changed the `PORT` for `kop-server`, then you will have to set the `KOP_PORT` variable accordingly.
+> [!NOTE]
+> If you change the `PORT` for `kop-server`, then you will have to set the `KOP_PORT` variable accordingly.
 
 Then run `kop Eggs Milk Flour` to create an initial list using the command line interface.
 
