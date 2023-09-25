@@ -18,6 +18,9 @@ If you have changed the `PORT` for `kop-server`, then you will have to set the `
 
 Then run `kop Eggs Milk Flour` to create an initial list using the command line interface.
 
+> [!IMPORTANT]
+> If you speak Swedish, then you will want to `alias kop='köp'`
+
 ## Definitions
 
 The definitions for the RPC server are found in the [definitions/](definitions/) directory.
