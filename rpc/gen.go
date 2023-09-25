@@ -4,14 +4,12 @@ package rpc
 
 import (
 	"bytes"
-	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -210,19 +208,10 @@ func encode(w http.ResponseWriter, r *http.Request, status int, v interface{}) e
 		return fmt.Errorf("encode json: %w", err)
 	}
 
-	var out io.Writer = w
-
-	if strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
-		w.Header().Set("Content-Encoding", "gzip")
-		gzw := gzip.NewWriter(w)
-		out = gzw
-		defer gzw.Close()
-	}
-
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(status)
 
-	if _, err := out.Write(b); err != nil {
+	if _, err := w.Write(b); err != nil {
 		return err
 	}
 
@@ -230,12 +219,12 @@ func encode(w http.ResponseWriter, r *http.Request, status int, v interface{}) e
 }
 
 func decode(r *http.Request, v interface{}) error {
-	bodyBytes, err := io.ReadAll(io.LimitReader(r.Body, 1024*1024))
+	body, err := io.ReadAll(io.LimitReader(r.Body, 1024*1024))
 	if err != nil {
 		return fmt.Errorf("decode: read body: %w", err)
 	}
 
-	err = json.Unmarshal(bodyBytes, v)
+	err = json.Unmarshal(body, v)
 	if err != nil {
 		return fmt.Errorf("decode: json.Unmarshal: %w", err)
 	}
@@ -305,25 +294,14 @@ func (s *ListClient) Add(ctx context.Context, r AddRequest) (*AddResponse, error
 		Error string
 	}
 
-	var bodyReader io.Reader = resp.Body
-
-	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
-		decodedBody, err := gzip.NewReader(resp.Body)
-		if err != nil {
-			return nil, fmt.Errorf("%w: List.Add: new gzip reader", err)
-		}
-		defer decodedBody.Close()
-		bodyReader = decodedBody
-	}
-
-	respBodyBytes, err := io.ReadAll(bodyReader)
+	data, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("%w: List.Add: read response body", err)
 	}
 
-	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
+	if err := json.Unmarshal(data, &response); err != nil {
 		if resp.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("List.Add: (%d) %v", resp.StatusCode, string(respBodyBytes))
+			return nil, fmt.Errorf("List.Add: (%d) %v", resp.StatusCode, string(data))
 		}
 		return nil, err
 	}
@@ -372,25 +350,14 @@ func (s *ListClient) Clear(ctx context.Context, r ClearRequest) (*ClearResponse,
 		Error string
 	}
 
-	var bodyReader io.Reader = resp.Body
-
-	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
-		decodedBody, err := gzip.NewReader(resp.Body)
-		if err != nil {
-			return nil, fmt.Errorf("%w: List.Clear: new gzip reader", err)
-		}
-		defer decodedBody.Close()
-		bodyReader = decodedBody
-	}
-
-	respBodyBytes, err := io.ReadAll(bodyReader)
+	data, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("%w: List.Clear: read response body", err)
 	}
 
-	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
+	if err := json.Unmarshal(data, &response); err != nil {
 		if resp.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("List.Clear: (%d) %v", resp.StatusCode, string(respBodyBytes))
+			return nil, fmt.Errorf("List.Clear: (%d) %v", resp.StatusCode, string(data))
 		}
 		return nil, err
 	}
@@ -439,25 +406,14 @@ func (s *ListClient) Items(ctx context.Context, r ItemsRequest) (*ItemsResponse,
 		Error string
 	}
 
-	var bodyReader io.Reader = resp.Body
-
-	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
-		decodedBody, err := gzip.NewReader(resp.Body)
-		if err != nil {
-			return nil, fmt.Errorf("%w: List.Items: new gzip reader", err)
-		}
-		defer decodedBody.Close()
-		bodyReader = decodedBody
-	}
-
-	respBodyBytes, err := io.ReadAll(bodyReader)
+	data, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("%w: List.Items: read response body", err)
 	}
 
-	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
+	if err := json.Unmarshal(data, &response); err != nil {
 		if resp.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("List.Items: (%d) %v", resp.StatusCode, string(respBodyBytes))
+			return nil, fmt.Errorf("List.Items: (%d) %v", resp.StatusCode, string(data))
 		}
 		return nil, err
 	}
@@ -506,25 +462,14 @@ func (s *ListClient) Remove(ctx context.Context, r RemoveRequest) (*RemoveRespon
 		Error string
 	}
 
-	var bodyReader io.Reader = resp.Body
-
-	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
-		decodedBody, err := gzip.NewReader(resp.Body)
-		if err != nil {
-			return nil, fmt.Errorf("%w: List.Remove: new gzip reader", err)
-		}
-		defer decodedBody.Close()
-		bodyReader = decodedBody
-	}
-
-	respBodyBytes, err := io.ReadAll(bodyReader)
+	data, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("%w: List.Remove: read response body", err)
 	}
 
-	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
+	if err := json.Unmarshal(data, &response); err != nil {
 		if resp.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("List.Remove: (%d) %v", resp.StatusCode, string(respBodyBytes))
+			return nil, fmt.Errorf("List.Remove: (%d) %v", resp.StatusCode, string(data))
 		}
 		return nil, err
 	}
