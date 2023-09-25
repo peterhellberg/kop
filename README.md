@@ -40,7 +40,7 @@ You can then remove an item from the list by calling `kop no Eggs`
 If you do not want to use the cli then you can use [cURL](https://curl.se) directly
 
 ```sh
-curl -d '{}' http://localhost:12432/rpc/List.Items
+curl -d '{}' localhost:12432/rpc/List.Items
 ```
 ```json
 {
@@ -54,7 +54,7 @@ curl -d '{}' http://localhost:12432/rpc/List.Items
 And even add something else to the list 🍺
 
 ```sh
-curl -d '{"items": ["Beer"]}' http://localhost:12432/rpc/List.Add
+curl -d '{"items": ["Beer"]}' localhost:12432/rpc/List.Add
 ```
 ```json
 {
