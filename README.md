@@ -20,7 +20,7 @@ Run `kop-server` in one terminal (this will by default start a web server on `lo
 Then run `kop Eggs Milk Flour` to create an initial list using the command line interface.
 
 > [!IMPORTANT]
-> If you speak Swedish, then you will want to `alias kop='köp'`
+> If you speak Swedish, then you will want to `alias köp='kop'` (and if not, then you might want to `alias buy='kop'`)
 
 ## Definitions
 
