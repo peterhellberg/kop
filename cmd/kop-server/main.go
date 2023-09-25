@@ -49,6 +49,7 @@ var t = template.Must(template.New("").Funcs(template.FuncMap{"join": strings.Jo
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="apple-mobile-web-app-capable" content="yes">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@next/css/pico.classless.min.css">
 		<title>📝 {{ join .Items ", " }}</title>
 	</head>
@@ -56,7 +57,7 @@ var t = template.Must(template.New("").Funcs(template.FuncMap{"join": strings.Jo
 		<main>
 			<article>
 				<header>
-					<h1>Köp 📝</h1>
+					<h1><a href="/" style="text-decoration: none; color: #2d3138">Köp 📝</a></h1>
 				</header>
 				<fieldset>
 				{{ range .Items }}
