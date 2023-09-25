@@ -74,6 +74,14 @@ And when you want to start a new list then just run `kop nothing`
 
 The definitions for the RPC service are found in [definitions/definitions.go](definitions/definitions.go)
 
+## Generated
+
+The generated code for the RPC service is in [rpc/gen.go](rpc/gen.go)
+
+## Implementation
+
+The example implementation of the `rpc.List` interface is in [list/list.go](list/list.go)
+
 <img src="https://assets.c7.se/svg/viking-gopher.svg" align="right" width="30%" height="300">
 
 ## License (MIT)
