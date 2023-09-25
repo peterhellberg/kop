@@ -24,7 +24,7 @@ Then run `kop Eggs Milk Flour` to create an initial list using the command line 
 
 ## Definitions
 
-The definitions for the RPC server are found in [definitions/definitions.go](definitions/definitions.go)
+The definitions for the RPC service are found in [definitions/definitions.go](definitions/definitions.go)
 
 <img src="https://assets.c7.se/svg/viking-gopher.svg" align="right" width="30%" height="300">
 
