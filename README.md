@@ -1,4 +1,4 @@
-# Köp
+# Köp 📝
 
 [![License MIT](https://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](https://github.com/peterhellberg/kop#license-mit)
 
