@@ -203,7 +203,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func encode(w http.ResponseWriter, r *http.Request, status int, v interface{}) error {
-	b, err := json.Marshal(v)
+	b, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
 		return fmt.Errorf("encode json: %w", err)
 	}
@@ -224,8 +224,7 @@ func decode(r *http.Request, v interface{}) error {
 		return fmt.Errorf("decode: read body: %w", err)
 	}
 
-	err = json.Unmarshal(body, v)
-	if err != nil {
+	if err := json.Unmarshal(body, v); err != nil {
 		return fmt.Errorf("decode: json.Unmarshal: %w", err)
 	}
 
