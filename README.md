@@ -82,6 +82,12 @@ The generated code for the RPC service is in [rpc/gen.go](rpc/gen.go)
 
 The example implementation of the `rpc.List` interface is in [list/list.go](list/list.go)
 
+## Frontend
+
+I added a small HTML frontend (For use from my phone, over [Tailscale](https://tailscale.com/)) using [html/template](https://pkg.go.dev/html/template) and [PicoCSS](https://v2.picocss.com/docs)
+
+It is available on `http://localhost:12432/` when running `kop-server`
+
 <img src="https://assets.c7.se/svg/viking-gopher.svg" align="right" width="30%" height="300">
 
 ## License (MIT)
