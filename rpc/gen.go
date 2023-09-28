@@ -25,7 +25,6 @@ type listServer struct {
 	list   List
 }
 
-// Register adds the List to the otohttp.Server.
 func RegisterList(server *Server, list List) {
 	handler := &listServer{
 		server: server,
@@ -119,15 +118,13 @@ type AddRequest struct {
 
 type AddResponse struct {
 	Items []string `json:"items"`
-	// Error is string explaining what went wrong. Empty if everything was fine.
-	Error string `json:"error,omitempty"`
+	Error string   `json:"error,omitempty"`
 }
 
 type ClearRequest struct {
 }
 
 type ClearResponse struct {
-	// Error is string explaining what went wrong. Empty if everything was fine.
 	Error string `json:"error,omitempty"`
 }
 
@@ -136,8 +133,7 @@ type ItemsRequest struct {
 
 type ItemsResponse struct {
 	Items []string `json:"items"`
-	// Error is string explaining what went wrong. Empty if everything was fine.
-	Error string `json:"error,omitempty"`
+	Error string   `json:"error,omitempty"`
 }
 
 type RemoveRequest struct {
@@ -146,25 +142,16 @@ type RemoveRequest struct {
 
 type RemoveResponse struct {
 	Items []string `json:"items"`
-	// Error is string explaining what went wrong. Empty if everything was fine.
-	Error string `json:"error,omitempty"`
+	Error string   `json:"error,omitempty"`
 }
 
-// Server handles rpc requests.
 type Server struct {
-	// Basepath is the path prefix to match.
-	// Default: /rpc/
 	Basepath string
-
-	routes map[string]http.Handler
-	// NotFound is the http.Handler to use when a resource is
-	// not found.
+	routes   map[string]http.Handler
 	NotFound http.Handler
-	// OnErr is called when there is an error.
-	OnErr func(w http.ResponseWriter, r *http.Request, err error)
+	OnErr    func(w http.ResponseWriter, r *http.Request, err error)
 }
 
-// NewServer makes a new Server.
 func NewServer() *Server {
 	return &Server{
 		Basepath: "/rpc/",
@@ -183,12 +170,10 @@ func NewServer() *Server {
 	}
 }
 
-// Register adds a handler for the specified service method.
 func (s *Server) Register(service, method string, h http.HandlerFunc) {
 	s.routes[fmt.Sprintf("%s%s.%s", s.Basepath, service, method)] = h
 }
 
-// ServeHTTP serves the request.
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		s.NotFound.ServeHTTP(w, r)
@@ -248,7 +233,6 @@ type ListClient struct {
 	rpc *RPC
 }
 
-// NewList makes a new client for accessing List services.
 func NewListClient(rpc *RPC) *ListClient {
 	return &ListClient{
 		rpc: rpc,
@@ -276,7 +260,6 @@ func (s *ListClient) Add(ctx context.Context, r AddRequest) (*AddResponse, error
 	if s.rpc.BeforeRequest != nil {
 		err = s.rpc.BeforeRequest(req)
 		if err != nil {
-			// don't wrap this error, it belongs to the user
 			return nil, err
 		}
 	}
@@ -332,7 +315,6 @@ func (s *ListClient) Clear(ctx context.Context, r ClearRequest) (*ClearResponse,
 	if s.rpc.BeforeRequest != nil {
 		err = s.rpc.BeforeRequest(req)
 		if err != nil {
-			// don't wrap this error, it belongs to the user
 			return nil, err
 		}
 	}
@@ -388,7 +370,6 @@ func (s *ListClient) Items(ctx context.Context, r ItemsRequest) (*ItemsResponse,
 	if s.rpc.BeforeRequest != nil {
 		err = s.rpc.BeforeRequest(req)
 		if err != nil {
-			// don't wrap this error, it belongs to the user
 			return nil, err
 		}
 	}
@@ -444,7 +425,6 @@ func (s *ListClient) Remove(ctx context.Context, r RemoveRequest) (*RemoveRespon
 	if s.rpc.BeforeRequest != nil {
 		err = s.rpc.BeforeRequest(req)
 		if err != nil {
-			// don't wrap this error, it belongs to the user
 			return nil, err
 		}
 	}

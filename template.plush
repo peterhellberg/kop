@@ -18,9 +18,9 @@ import (
 )
 
 <%= for (service) in def.Services { %>
-<%= format_comment_text(service.Comment) %>type <%= service.Name %> interface {
+type <%= service.Name %> interface {
 <%= for (method) in service.Methods { %>
-	<%= format_comment_text(method.Comment) %><%= method.Name %>(context.Context, <%= method.InputObject.TypeName %>) (*<%= method.OutputObject.TypeName %>, error)<% } %>
+	<%= method.Name %>(context.Context, <%= method.InputObject.TypeName %>) (*<%= method.OutputObject.TypeName %>, error)<% } %>
 }
 <% } %>
 
@@ -30,7 +30,6 @@ type <%= camelize_down(service.Name) %>Server struct {
 	<%= camelize_down(service.Name) %> <%= service.Name %>
 }
 
-// Register adds the <%= service.Name %> to the otohttp.Server.
 func Register<%= service.Name %>(server *Server, <%= camelize_down(service.Name) %> <%= service.Name %>) {
 	handler := &<%= camelize_down(service.Name) %>Server{
 		server: server,
@@ -61,27 +60,19 @@ func (s *<%= camelize_down(service.Name) %>Server) handle<%= method.Name %>(w ht
 <% } %>
 
 <%= for (object) in def.Objects { %>
-<%= format_comment_text(object.Comment) %>type <%= object.Name %> struct {
-	<%= for (field) in object.Fields { %><%= format_comment_text(field.Comment) %><%= field.Name %> <%= if (field.Type.Multiple == true) { %>[]<% } %><%= field.Type.TypeName %> `json:"<%= field.NameLowerCamel %><%= if (field.OmitEmpty) { %>,omitempty<% } %>"`
+type <%= object.Name %> struct {
+	<%= for (field) in object.Fields { %><%= field.Name %> <%= if (field.Type.Multiple == true) { %>[]<% } %><%= field.Type.TypeName %> `json:"<%= field.NameLowerCamel %><%= if (field.OmitEmpty) { %>,omitempty<% } %>"`
 <% } %>
 }
 <% } %>
 
-// Server handles rpc requests.
 type Server struct {
-	// Basepath is the path prefix to match.
-	// Default: /rpc/
 	Basepath string
-
 	routes map[string]http.Handler
-	// NotFound is the http.Handler to use when a resource is
-	// not found.
 	NotFound http.Handler
-	// OnErr is called when there is an error.
 	OnErr func(w http.ResponseWriter, r *http.Request, err error)
 }
 
-// NewServer makes a new Server.
 func NewServer() *Server {
 	return &Server{
 		Basepath: "/rpc/",
@@ -100,12 +91,10 @@ func NewServer() *Server {
 	}
 }
 
-// Register adds a handler for the specified service method.
 func (s *Server) Register(service, method string, h http.HandlerFunc) {
 	s.routes[fmt.Sprintf("%s%s.%s", s.Basepath, service, method)] = h
 }
 
-// ServeHTTP serves the request.
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		s.NotFound.ServeHTTP(w, r)
@@ -166,7 +155,6 @@ func New(endpoint string) *RPC {
 	rpc *RPC
 }
 
-// New<%= service.Name %> makes a new client for accessing <%= service.Name %> services.
 func New<%= service.Name %>Client(rpc *RPC) *<%= service.Name %>Client {
 	return &<%= service.Name %>Client{
 		rpc: rpc,
@@ -195,7 +183,6 @@ func New<%= service.Name %>Client(rpc *RPC) *<%= service.Name %>Client {
   if s.rpc.BeforeRequest != nil {
 		err = s.rpc.BeforeRequest(req)
 		if err != nil {
-			// don't wrap this error, it belongs to the user
 			return nil, err
 		}
 	}
