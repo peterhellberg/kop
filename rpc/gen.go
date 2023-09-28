@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"time"
 )
@@ -157,14 +156,11 @@ func NewServer() *Server {
 		Basepath: "/rpc/",
 		routes:   make(map[string]http.Handler),
 		OnErr: func(w http.ResponseWriter, r *http.Request, err error) {
-			errObj := struct {
+			encode(w, r, http.StatusInternalServerError, struct {
 				Error string `json:"error"`
 			}{
 				Error: err.Error(),
-			}
-			if err := encode(w, r, http.StatusInternalServerError, errObj); err != nil {
-				log.Printf("failed to encode error: %s\n", err)
-			}
+			})
 		},
 		NotFound: http.NotFoundHandler(),
 	}
