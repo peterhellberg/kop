@@ -25,7 +25,7 @@ func run(args []string, stdout io.Writer) error {
 		args[i] = strings.ToUpper(args[i])
 	}
 
-	list := rpc.NewListClient(rpc.NewClient(endpoint()))
+	list := rpc.NewListClient(rpc.New(endpoint()))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

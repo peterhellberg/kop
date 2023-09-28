@@ -231,28 +231,27 @@ func decode(r *http.Request, v interface{}) error {
 	return nil
 }
 
-type Client struct {
+type RPC struct {
+	*http.Client
 	Endpoint      string
-	HTTPClient    *http.Client
 	BeforeRequest func(r *http.Request) error
 }
 
-func NewClient(endpoint string) *Client {
-	c := &Client{
-		Endpoint:   endpoint,
-		HTTPClient: &http.Client{Timeout: 10 * time.Second},
+func New(endpoint string) *RPC {
+	return &RPC{
+		Endpoint: endpoint,
+		Client:   &http.Client{Timeout: 10 * time.Second},
 	}
-	return c
 }
 
 type ListClient struct {
-	client *Client
+	rpc *RPC
 }
 
 // NewList makes a new client for accessing List services.
-func NewListClient(client *Client) *ListClient {
+func NewListClient(rpc *RPC) *ListClient {
 	return &ListClient{
-		client: client,
+		rpc: rpc,
 	}
 }
 
@@ -262,7 +261,7 @@ func (s *ListClient) Add(ctx context.Context, r AddRequest) (*AddResponse, error
 		return nil, fmt.Errorf("%w: List.Add: marshal AddRequest", err)
 	}
 
-	rawurl := s.client.Endpoint + "List.Add"
+	rawurl := s.rpc.Endpoint + "List.Add"
 
 	req, err := http.NewRequest(http.MethodPost, rawurl, bytes.NewReader(data))
 	if err != nil {
@@ -274,15 +273,15 @@ func (s *ListClient) Add(ctx context.Context, r AddRequest) (*AddResponse, error
 
 	req = req.WithContext(ctx)
 
-	if s.client.BeforeRequest != nil {
-		err = s.client.BeforeRequest(req)
+	if s.rpc.BeforeRequest != nil {
+		err = s.rpc.BeforeRequest(req)
 		if err != nil {
 			// don't wrap this error, it belongs to the user
 			return nil, err
 		}
 	}
 
-	resp, err := s.client.HTTPClient.Do(req)
+	resp, err := s.rpc.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("%w: List.Add", err)
 	}
@@ -318,7 +317,7 @@ func (s *ListClient) Clear(ctx context.Context, r ClearRequest) (*ClearResponse,
 		return nil, fmt.Errorf("%w: List.Clear: marshal ClearRequest", err)
 	}
 
-	rawurl := s.client.Endpoint + "List.Clear"
+	rawurl := s.rpc.Endpoint + "List.Clear"
 
 	req, err := http.NewRequest(http.MethodPost, rawurl, bytes.NewReader(data))
 	if err != nil {
@@ -330,15 +329,15 @@ func (s *ListClient) Clear(ctx context.Context, r ClearRequest) (*ClearResponse,
 
 	req = req.WithContext(ctx)
 
-	if s.client.BeforeRequest != nil {
-		err = s.client.BeforeRequest(req)
+	if s.rpc.BeforeRequest != nil {
+		err = s.rpc.BeforeRequest(req)
 		if err != nil {
 			// don't wrap this error, it belongs to the user
 			return nil, err
 		}
 	}
 
-	resp, err := s.client.HTTPClient.Do(req)
+	resp, err := s.rpc.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("%w: List.Clear", err)
 	}
@@ -374,7 +373,7 @@ func (s *ListClient) Items(ctx context.Context, r ItemsRequest) (*ItemsResponse,
 		return nil, fmt.Errorf("%w: List.Items: marshal ItemsRequest", err)
 	}
 
-	rawurl := s.client.Endpoint + "List.Items"
+	rawurl := s.rpc.Endpoint + "List.Items"
 
 	req, err := http.NewRequest(http.MethodPost, rawurl, bytes.NewReader(data))
 	if err != nil {
@@ -386,15 +385,15 @@ func (s *ListClient) Items(ctx context.Context, r ItemsRequest) (*ItemsResponse,
 
 	req = req.WithContext(ctx)
 
-	if s.client.BeforeRequest != nil {
-		err = s.client.BeforeRequest(req)
+	if s.rpc.BeforeRequest != nil {
+		err = s.rpc.BeforeRequest(req)
 		if err != nil {
 			// don't wrap this error, it belongs to the user
 			return nil, err
 		}
 	}
 
-	resp, err := s.client.HTTPClient.Do(req)
+	resp, err := s.rpc.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("%w: List.Items", err)
 	}
@@ -430,7 +429,7 @@ func (s *ListClient) Remove(ctx context.Context, r RemoveRequest) (*RemoveRespon
 		return nil, fmt.Errorf("%w: List.Remove: marshal RemoveRequest", err)
 	}
 
-	rawurl := s.client.Endpoint + "List.Remove"
+	rawurl := s.rpc.Endpoint + "List.Remove"
 
 	req, err := http.NewRequest(http.MethodPost, rawurl, bytes.NewReader(data))
 	if err != nil {
@@ -442,15 +441,15 @@ func (s *ListClient) Remove(ctx context.Context, r RemoveRequest) (*RemoveRespon
 
 	req = req.WithContext(ctx)
 
-	if s.client.BeforeRequest != nil {
-		err = s.client.BeforeRequest(req)
+	if s.rpc.BeforeRequest != nil {
+		err = s.rpc.BeforeRequest(req)
 		if err != nil {
 			// don't wrap this error, it belongs to the user
 			return nil, err
 		}
 	}
 
-	resp, err := s.client.HTTPClient.Do(req)
+	resp, err := s.rpc.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("%w: List.Remove", err)
 	}
