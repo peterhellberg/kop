@@ -7,13 +7,21 @@ import (
 	"github.com/peterhellberg/kop/rpc"
 )
 
-type List struct {
-	store Store[string]
+type Store interface {
+	Add(...string)
+	Remove(...string)
+	Contains(string) bool
+	Members() []string
+	Clear()
 }
 
-func New(vals ...string) *List {
+type List struct {
+	store Store
+}
+
+func New(store Store) *List {
 	return &List{
-		store: newSet(fn(vals, strings.ToUpper)...),
+		store: store,
 	}
 }
 
@@ -37,4 +45,14 @@ func (l *List) Clear(ctx context.Context, r rpc.ClearRequest) (*rpc.ClearRespons
 
 func (l *List) Items(ctx context.Context, r rpc.ItemsRequest) (*rpc.ItemsResponse, error) {
 	return &rpc.ItemsResponse{Items: l.store.Members()}, nil
+}
+
+func fn[T, V any](ts []T, fn func(T) V) []V {
+	result := make([]V, len(ts))
+
+	for i, t := range ts {
+		result[i] = fn(t)
+	}
+
+	return result
 }
