@@ -9,6 +9,7 @@ import (
 
 	"github.com/peterhellberg/kop/list"
 	"github.com/peterhellberg/kop/rpc"
+	"github.com/peterhellberg/kop/store/memory"
 )
 
 const defaultPort = "12432"
@@ -16,7 +17,7 @@ const defaultPort = "12432"
 func main() {
 	server := rpc.NewServer()
 
-	svc := list.New()
+	svc := list.New(memory.Store())
 
 	rpc.RegisterList(server, svc)
 
