@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 	"os"
@@ -9,15 +10,26 @@ import (
 
 	"github.com/peterhellberg/kop/list"
 	"github.com/peterhellberg/kop/rpc"
+	"github.com/peterhellberg/kop/store/file"
 	"github.com/peterhellberg/kop/store/memory"
 )
 
 const defaultPort = "12432"
 
 func main() {
+	var name string
+
+	flag.StringVar(&name, "name", "list", "The name of the cache file to store the list in")
+	flag.Parse()
+
 	server := rpc.NewServer()
 
-	svc := list.New(memory.Store())
+	store, err := file.Store(name, memory.Store())
+	if err != nil {
+		log.Fatalf("file.Store error: %v\n", err)
+	}
+
+	svc := list.New(store)
 
 	rpc.RegisterList(server, svc)
 
