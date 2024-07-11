@@ -36,7 +36,7 @@ func run(args []string, stdout io.Writer) error {
 			return err
 		}
 
-		return bullets(res.Items)
+		return bullets(stdout, res.Items)
 	}
 
 	switch args[0] {
@@ -50,14 +50,14 @@ func run(args []string, stdout io.Writer) error {
 			return err
 		}
 
-		return bullets(res.Items)
+		return bullets(stdout, res.Items)
 	default:
 		res, err := list.Add(ctx, rpc.AddRequest{Items: args})
 		if err != nil {
 			return err
 		}
 
-		return bullets(res.Items)
+		return bullets(stdout, res.Items)
 	}
 }
 
@@ -69,9 +69,9 @@ func endpoint() string {
 	return defaultEndpoint
 }
 
-func bullets(items []string) error {
+func bullets(w io.Writer, items []string) error {
 	for _, item := range items {
-		fmt.Println(" -", item)
+		fmt.Fprintln(w, " -", item)
 	}
 
 	return nil
