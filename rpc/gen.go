@@ -250,7 +250,6 @@ func (s *ListClient) Add(ctx context.Context, r AddRequest) (*AddResponse, error
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept-Encoding", "gzip")
 
 	req = req.WithContext(ctx)
 
@@ -269,7 +268,7 @@ func (s *ListClient) Add(ctx context.Context, r AddRequest) (*AddResponse, error
 
 	var response struct {
 		AddResponse
-		Error string
+		Error string `json:"error"`
 	}
 
 	data, err = io.ReadAll(resp.Body)
@@ -305,7 +304,6 @@ func (s *ListClient) Clear(ctx context.Context, r ClearRequest) (*ClearResponse,
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept-Encoding", "gzip")
 
 	req = req.WithContext(ctx)
 
@@ -324,7 +322,7 @@ func (s *ListClient) Clear(ctx context.Context, r ClearRequest) (*ClearResponse,
 
 	var response struct {
 		ClearResponse
-		Error string
+		Error string `json:"error"`
 	}
 
 	data, err = io.ReadAll(resp.Body)
@@ -360,7 +358,6 @@ func (s *ListClient) Items(ctx context.Context, r ItemsRequest) (*ItemsResponse,
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept-Encoding", "gzip")
 
 	req = req.WithContext(ctx)
 
@@ -379,7 +376,7 @@ func (s *ListClient) Items(ctx context.Context, r ItemsRequest) (*ItemsResponse,
 
 	var response struct {
 		ItemsResponse
-		Error string
+		Error string `json:"error"`
 	}
 
 	data, err = io.ReadAll(resp.Body)
@@ -415,7 +412,6 @@ func (s *ListClient) Remove(ctx context.Context, r RemoveRequest) (*RemoveRespon
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept-Encoding", "gzip")
 
 	req = req.WithContext(ctx)
 
@@ -434,7 +430,7 @@ func (s *ListClient) Remove(ctx context.Context, r RemoveRequest) (*RemoveRespon
 
 	var response struct {
 		RemoveResponse
-		Error string
+		Error string `json:"error"`
 	}
 
 	data, err = io.ReadAll(resp.Body)
