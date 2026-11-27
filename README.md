@@ -118,9 +118,13 @@ and `rpc/gen.go` are up to date:
 go test ./...
 ```
 
+Field types can be any type that JSON can handle, including types from other packages (such as `time.Time`),
+which are imported. Definitions that cannot be expressed (methods of another form, non-struct types declared in the
+definitions package, unexported or embedded fields, func, chan and non-empty interface types, or two imported
+packages with the same name) are rejected with an error.
+
 > [!NOTE]
-> `gen` does not validate the definitions; anything it cannot express results in generated code that does not compile.
-> Doc comments are not carried over, and types from other packages (such as `time.Time`) are not supported.
+> Doc comments are not carried over, and only structs reachable from a service method are generated.
 
 ## Generated
 
