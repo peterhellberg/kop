@@ -49,7 +49,7 @@ func TestJSONNames(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	want := `{"thing":{"name":"n","children":null,"id":"i","httpServer":"h","userID":"u"}}`
+	want := `{"thing":{"name":"n","children":null,"id":"i","httpServer":"h","userID":"u","created":"0001-01-01T00:00:00Z","addr":""}}`
 
 	if string(b) != want {
 		t.Errorf("got %s, want %s", b, want)

@@ -1,6 +1,12 @@
 // Package defs is the fixture that package rpctest is generated from.
 package defs
 
+import (
+	"math/rand/v2"
+	"net/netip"
+	"time"
+)
+
 type List interface {
 	Add(AddRequest) AddResponse
 	Clear(ClearRequest) ClearResponse
@@ -34,4 +40,7 @@ type Thing struct {
 	ID         string
 	HTTPServer string
 	UserID     string
+	Created    time.Time
+	Addr       netip.Addr
+	RNG        *rand.PCG `json:"-"`
 }

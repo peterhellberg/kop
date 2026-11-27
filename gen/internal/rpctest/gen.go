@@ -9,7 +9,9 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	rand "math/rand/v2"
 	"net/http"
+	"net/netip"
 	"time"
 )
 
@@ -118,11 +120,14 @@ type ItemsResponse struct {
 }
 
 type Thing struct {
-	Name       string  `json:"name"`
-	Children   []Thing `json:"children"`
-	ID         string  `json:"id"`
-	HTTPServer string  `json:"httpServer"`
-	UserID     string  `json:"userID"`
+	Name       string     `json:"name"`
+	Children   []Thing    `json:"children"`
+	ID         string     `json:"id"`
+	HTTPServer string     `json:"httpServer"`
+	UserID     string     `json:"userID"`
+	Created    time.Time  `json:"created"`
+	Addr       netip.Addr `json:"addr"`
+	RNG        *rand.PCG  `json:"-"`
 }
 
 type Server struct {

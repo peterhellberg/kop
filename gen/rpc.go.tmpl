@@ -3,14 +3,9 @@
 package {{.Package}}
 
 import (
-	"bytes"
-	"context"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"io"
-	"net/http"
-	"time"
+{{- range $path, $name := .Imports}}
+	{{if ne $name (base $path)}}{{$name}} {{end}}"{{$path}}"
+{{- end}}
 )
 {{range .Services}}
 type {{.Name}} interface {
