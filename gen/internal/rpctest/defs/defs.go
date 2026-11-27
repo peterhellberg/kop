@@ -1,8 +1,6 @@
 // Package defs is the fixture that package rpctest is generated from.
 package defs
 
-//go:generate go run ../generate ../gen.go
-
 type List interface {
 	Add(AddRequest) AddResponse
 	Clear(ClearRequest) ClearResponse

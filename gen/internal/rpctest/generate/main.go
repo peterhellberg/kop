@@ -1,4 +1,5 @@
-// Command generate writes the rpctest package from the defs fixture.
+// Command generate writes gen.go in the current directory from the defs
+// fixture. It is run by go generate in package rpctest.
 package main
 
 import (
@@ -18,7 +19,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := os.WriteFile(os.Args[1], buf.Bytes(), 0o644); err != nil {
+	if err := os.WriteFile("gen.go", buf.Bytes(), 0o644); err != nil {
 		log.Fatal(err)
 	}
 }
