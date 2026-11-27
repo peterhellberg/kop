@@ -130,13 +130,26 @@ type Thing struct {
 	RNG        *rand.PCG  `json:"-"`
 }
 
+// Server routes POST requests for {Basepath}Service.Method to the
+// registered handlers.
 type Server struct {
+	// Basepath is the path prefix of every route. It must be set before
+	// registering services. The default is "/rpc/".
 	Basepath string
-	routes   map[string]http.Handler
+
+	routes map[string]http.Handler
+
+	// NotFound handles requests that are not POST, or whose path does not
+	// match a registered method.
 	NotFound http.Handler
-	OnErr    func(w http.ResponseWriter, r *http.Request, err error)
+
+	// OnErr handles errors from decoding requests, from the service methods
+	// and from encoding responses. The default writes status 500 and a
+	// {"error": "..."} body, which the client returns as an error.
+	OnErr func(w http.ResponseWriter, r *http.Request, err error)
 }
 
+// NewServer returns a Server with the default Basepath, NotFound and OnErr.
 func NewServer() *Server {
 	return &Server{
 		Basepath: "/rpc/",
@@ -152,6 +165,7 @@ func NewServer() *Server {
 	}
 }
 
+// Register routes POST requests for {Basepath}service.method to h.
 func (s *Server) Register(service, method string, h http.HandlerFunc) {
 	s.routes[fmt.Sprintf("%s%s.%s", s.Basepath, service, method)] = h
 }
@@ -185,6 +199,7 @@ func encode(w http.ResponseWriter, r *http.Request, status int, v interface{}) e
 	return nil
 }
 
+// decode reads a JSON request body of at most 1 MB into v.
 func decode(r *http.Request, v interface{}) error {
 	body, err := io.ReadAll(io.LimitReader(r.Body, 1024*1024))
 	if err != nil {
@@ -198,12 +213,22 @@ func decode(r *http.Request, v interface{}) error {
 	return nil
 }
 
+// RPC holds the HTTP client and endpoint shared by the service clients.
 type RPC struct {
 	*http.Client
-	Endpoint      string
+
+	// Endpoint is the URL that "Service.Method" is appended to,
+	// such as "http://localhost:8080/rpc/".
+	Endpoint string
+
+	// BeforeRequest, if set, is called with each request before it is
+	// sent, e.g. to add headers. If it returns an error, the request is
+	// not sent and the error is returned.
 	BeforeRequest func(r *http.Request) error
 }
 
+// New returns an RPC for endpoint, using an http.Client with a 10 second
+// timeout.
 func New(endpoint string) *RPC {
 	return &RPC{
 		Endpoint: endpoint,
