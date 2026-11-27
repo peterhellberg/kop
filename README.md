@@ -108,6 +108,16 @@ Regenerate [rpc/gen.go](rpc/gen.go) by running:
 go generate ./...
 ```
 
+The generated code is tested in [gen/internal/rpctest](gen/internal/rpctest), which is generated
+from the fixture in [gen/internal/rpctest/defs](gen/internal/rpctest/defs/defs.go) by the same
+`go generate ./...`. Its tests run the generated server and client against each other, and
+(together with a test in [internal/generate](internal/generate)) check that both `rpctest/gen.go`
+and `rpc/gen.go` are up to date:
+
+```sh
+go test ./...
+```
+
 > [!NOTE]
 > `gen` does not validate the definitions; anything it cannot express results in generated code that does not compile.
 > Doc comments are not carried over, and types from other packages (such as `time.Time`) are not supported.
