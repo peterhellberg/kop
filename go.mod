@@ -1,3 +1,3 @@
 module github.com/peterhellberg/kop
 
-go 1.21.1
+go 1.27
